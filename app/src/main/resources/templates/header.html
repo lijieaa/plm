@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<head th:fragment="head">
+    <meta charset="UTF-8" />
+    <title >江东厂</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/icon.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/Normalize.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css"  th:href="@{/css/jiangdong.css}" />
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"  th:href="@{/plugins/grid/ui.jqgrid.css}" />
+    <script type="application/javascript" th:src="@{/js/jquery.min.js}"}></script>
+    <script type="application/javascript" th:src="@{/bootstrap/js/bootstrap.js}"}></script>
+    <script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script type="application/javascript" th:src="@{/plugins/grid/jquery.jqGrid.src.js}"}></script>
+    <script type="application/javascript" th:src="@{/plugins/grid/grid.locale-cn.js}"}></script>
+    <script type="application/javascript" th:src="@{/js/vue.js}"}></script>
+    <script type="application/javascript" th:src="@{/js/bootstrapprompt.js}"}></script>
+    <script type="application/javascript" th:src="@{/js/bootbox.min.js}"}></script>
+    <script type="application/javascript" th:src="@{/js/common.js}"}></script>
+</head>
+<body>
+    <nav  th:fragment="header"  class="navbar  navbar-fixed-top navbar-feelstyle">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="glyphicon glyphicon-th-list"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img th:src="@{/image/mark.png}" alt=""/></a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav nav-feelstyle">
+                    <li><a href="#" class="bdr">&nbsp;<br/>&nbsp;</a></li>
+                    <li ><a th:href="@{/index}" class="active">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#setup" /></svg>
+                        <br/>首页</a></li>
+                    <li><a href="#">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#eqp" /></svg>
+                        <br/>设备监控</a></li>
+                    <li><a href="#">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#maintain" /></svg>
+                        <br/>设备运维</a></li>
+                    <li><a href="#">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#record" /></svg>
+                        <br/>设备档案管理</a></li>
+                    <li><a th:href="@{/client}">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#manager" /></svg>
+                        <br/>客户管理</a></li>
+                    <li><a href="#">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#work" /></svg>
+                        <br/>工作圈管理</a></li>
+                    <li><a th:href="@{/sys}">
+                        <svg class="menu-btn">  <use xlink:href="/image/list.svg#setup" /></svg>
+                        <br/>系统设置</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right hide-first cover-style">
+                    <li><a href="#"><div class="login-name">陆涛</div><div class="portrait"><img class="img-responsive" th:src="@{image/portrait.png}" alt=""/></div></a></li>
+                    <li><a href="#"><svg class="btn-person"><use xlink:href="/image/list.svg#person" /></svg>个人中心</a> </li>
+                    <li><a href="#">  <form th:action="@{/logout}" method="post" class="" role="search">
+                        <button type="submit" class=" cover-style"><svg class="btn-person">  <use xlink:href="/image/list.svg#exit" /></svg>退出系统</button>
+                    </form></a> </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

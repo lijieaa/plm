@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="jd_plm" uuid="4fa376ff-1f13-4258-9de3-8ddc2e4ee20b">
+    <database-info product="MySQL" version="5.6.27-0ubuntu0.15.04.1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.44 ( Revision: b3cda4f864902ffdde495b9df93937c3e20009be )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="jd_plm"/>
+    <table name="cus_gat" schema="" catalog="jd_plm" type="TABLE">
+      <column name="gat_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="5Li76ZSu" autoIncrement="true"/>
+      <column name="gat_ip" sqlType="VARCHAR" precision="15" scale="0" nullable="true" jdbcType="12" remarks="aXDlnLDlnYA="/>
+      <column name="gat_name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5ZCN56ew"/>
+      <column name="gat_imsi" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12" remarks="aXNtaQ=="/>
+      <column name="gat_type" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12" remarks="5py65Zmo57G75Z6L"/>
+      <column name="gat_status" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" remarks="dHJ1ZS3lnKjnur/vvIxmYWxzZS3nprvnur8="/>
+      <column name="creat_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Yib5bu65pe26Ze0"/>
+      <column name="update_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5pyA5ZCO5pu05paw5pe26Ze0"/>
+      <primary-key name="PRIMARY" columns="gat_id"/>
+      <index name="gat_name" unique="true" columns="gat_name"/>
+    </table>
+    <table name="cus_org" schema="" catalog="jd_plm" type="TABLE">
+      <column name="cus_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="cus_name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a6i5oi35ZCN56ew"/>
+      <column name="cus_addr" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a6i5oi35Zyw5Z2A"/>
+      <column name="cus_con" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" remarks="6IGU57O75Lq6"/>
+      <column name="cus_tel" sqlType="VARCHAR" precision="11" scale="0" nullable="true" jdbcType="12" remarks="6IGU57O755S16K+d"/>
+      <column name="cus_email" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12" remarks="6YKu566x"/>
+      <column name="create_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Yib5bu65pe26Ze0"/>
+      <column name="update_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5pyA5ZCO5pu05paw5pe26Ze0"/>
+      <primary-key name="PRIMARY" columns="cus_id"/>
+      <index name="cus_name" unique="true" columns="cus_name"/>
+    </table>
+    <table name="oauth_client_details" schema="" catalog="jd_plm" type="TABLE">
+      <column name="client_id" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="resource_ids" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="client_secret" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="scope" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="authorized_grant_types" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="web_server_redirect_uri" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="authorities" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="access_token_validity" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="refresh_token_validity" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="additional_information" sqlType="VARCHAR" precision="4096" scale="0" nullable="true" jdbcType="12"/>
+      <column name="autoapprove" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="client_id"/>
+    </table>
+    <table name="sys_menu" schema="" catalog="jd_plm" type="TABLE">
+      <column name="mid" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="mname" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" remarks="6I+c5Y2V5ZCN56ew"/>
+      <column name="permission" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" remarks="5p2D6ZmQ56CB"/>
+      <column name="mdescription" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12" remarks="6I+c5Y2V5o+P6L+w"/>
+      <column name="parent_id" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5" remarks="54i257qn6I+c5Y2V"/>
+      <column name="url" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <column name="icon" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" remarks="6I+c5Y2V5pi+56S65Zu+5qCH"/>
+      <column name="_order" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="5pi+56S66aG65bqP"/>
+      <column name="belong" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="6I+c5Y2V5omA5bGe77yMMe+8muaxn+S4nOWOguWSjOWuouaIt+WFseacie+8jDDvvJrmsZ/kuJzljoI="/>
+      <primary-key name="PRIMARY" columns="mid"/>
+    </table>
+    <table name="sys_role" schema="" catalog="jd_plm" type="TABLE">
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="6KeS6ImySUQ=" autoIncrement="true"/>
+      <column name="role_name" sqlType="CHAR" precision="50" scale="0" nullable="true" jdbcType="1" remarks="6KeS6Imy5ZCN56ew"/>
+      <column name="role_nickname" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="5pi+56S65ZCN56ew"/>
+      <column name="create_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Yib5bu65pe26Ze0"/>
+      <column name="update_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5pyA5ZCO5pu05paw5pe26Ze0"/>
+      <primary-key name="PRIMARY" columns="role_id"/>
+      <index name="AK_Key_1" unique="true" columns="role_name,role_nickname"/>
+    </table>
+    <table name="sys_role_menu" schema="" catalog="jd_plm" type="TABLE">
+      <column name="rid" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" def="MA==" remarks="6KeS6ImySUQ="/>
+      <column name="mid" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" def="MA==" remarks="6I+c5Y2VSUQ="/>
+      <column name="cid" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" remarks="5a6i5oi3SUQ="/>
+      <primary-key name="PRIMARY" columns="rid,mid,cid"/>
+    </table>
+    <table name="sys_user" schema="" catalog="jd_plm" type="TABLE">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="5Li76ZSu" autoIncrement="true"/>
+      <column name="username" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="55So5oi35ZCN"/>
+      <column name="nickname" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="5pi156ew"/>
+      <column name="tel" sqlType="CHAR" precision="11" scale="0" nullable="true" jdbcType="1" remarks="55S16K+d"/>
+      <column name="email" sqlType="CHAR" precision="20" scale="0" nullable="true" jdbcType="1" remarks="6YKu566x"/>
+      <column name="create_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Yib5bu65pe26Ze0"/>
+      <column name="update_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5pyA5ZCO5pu05paw5pe26Ze0"/>
+      <column name="password" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a+G56CB"/>
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="6KeS6ImyaWQ="/>
+      <primary-key name="PRIMARY" columns="user_id"/>
+      <index name="tel" unique="true" columns="tel"/>
+    </table>
+    <table name="sys_user_role" schema="" catalog="jd_plm" type="TABLE">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="5Li76ZSu"/>
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="6KeS6ImySUQ="/>
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="user_role_view" schema="" catalog="jd_plm" type="VIEW">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="5Li76ZSu"/>
+      <column name="username" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="55So5oi35ZCN"/>
+      <column name="nickname" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="5pi156ew"/>
+      <column name="tel" sqlType="CHAR" precision="11" scale="0" nullable="true" jdbcType="1" remarks="55S16K+d"/>
+      <column name="email" sqlType="CHAR" precision="20" scale="0" nullable="true" jdbcType="1" remarks="6YKu566x"/>
+      <column name="create_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5Yib5bu65pe26Ze0"/>
+      <column name="update_time" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5pyA5ZCO5pu05paw5pe26Ze0"/>
+      <column name="password" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" remarks="5a+G56CB"/>
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="6KeS6ImyaWQ="/>
+      <column name="role_name" sqlType="CHAR" precision="50" scale="0" nullable="true" jdbcType="1" remarks="6KeS6Imy5ZCN56ew"/>
+      <column name="role_nickname" sqlType="CHAR" precision="100" scale="0" nullable="true" jdbcType="1" remarks="5pi+56S65ZCN56ew"/>
+    </table>
+  </data-source>
+</component>

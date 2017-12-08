@@ -1,0 +1,217 @@
+
+html,body{
+  width:100%;
+  height:100%;
+}
+.wrapper{
+  width:100%;
+  min-height:100%;
+
+
+}
+
+.login-page{
+  background:url("../image/bg-login.jpg") top center no-repeat;
+  background-size:cover;
+  /*  background: #aeaeae;*/
+  position:relative;
+}
+
+.index-page{
+  background:url("../image/bg-index.jpg") top center no-repeat;
+  background-size:cover;
+  /*  background: #aeaeae;*/
+  position:relative;
+
+}
+.footer{
+  width:100%;
+  height:135px;
+  bottom:0;
+  position:absolute;
+  background:#11252f
+}
+
+.login-box{
+  width: 416px;
+  height:600px;
+  margin-top:155px;
+}
+
+.btn-login{
+  height: 66px;
+  font-size:30px;
+  letter-spacing: 10px;
+  background: #14dffb;
+  border:1px solid #0d9df2 ;
+  box-shadow: 0px 0px 10px rgba(13,157,242,0.8) inset,0px 0px 5px 1px rgba(24,225,251,0.5);
+  color:#ffffff;
+}
+.btn-login:hover{
+  color:#ffffff;
+}
+.sys-logo{
+  height:68px;
+}
+.sys-name{
+  font-size:40px;
+  color:#ffffff;
+  font-weight: bold;
+}
+
+/*rewrite*/
+.has-feelstyle .form-control{
+  height: 66px;
+  padding:12px 16px 10px 50.5px;
+  border:1px solid #7a7a7a;
+  background: rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 4px 2px rgba(122,122,122,0.5) inset;
+  color:#ffffff;
+  font-size:20px;
+}
+
+
+.has-feelstyle .form-control-feedback{
+  top:11px !important;
+  left:10px;
+
+}
+.navbar-feelstyle{
+  background:url("../image/bg-header.png") rgba(0,0,0,0.3);
+  box-shadow:0px 2px 4px 2px rgba(0,0,0,0.3) inset;
+  border-bottom:1px solid rgba(231,231,231,0.3);
+  padding:9px 0px 1px 0px;
+  background-blend-mode: overlay;
+}
+.navbar-feelstyle .navbar-header{
+  margin-right:35px;
+}
+.navbar-feelstyle .navbar-toggle {
+  border-color: #ddd;
+}
+.nav-feelstyle  > li > a{
+  text-align: center;
+  padding: 10px 45px;
+  font-size:16px;
+  color:#0ca3f1;
+/*  border-left:1px solid ;*/
+  border-right:1px solid ;
+  border-image-slice: 4 4;
+  border-image-width: 4 4;
+  border-image-source:linear-gradient(0deg,rgba(0,0,0,0) 10% ,rgba(15,123,177,1) 35%,rgba(15,123,177,1) 65%,rgba(0,0,0,0) 100%) ;
+
+}
+.nav-feelstyle > li > a.bdr{
+
+  padding: 10px 1px;
+  /*  border-left:1px solid ;*/
+  border-right:1px solid ;
+  border-image-slice: 4 4;
+  border-image-width: 4 4;
+  border-image-source:linear-gradient(0deg,rgba(0,0,0,0) 10% ,rgba(15,123,177,1) 35%,rgba(15,123,177,1) 65%,rgba(0,0,0,0) 100%) ;
+
+}
+.navbar-feelstyle .nav > li > a.active,.nav-feelstyle  > li > a:hover{
+  background-image:linear-gradient(90deg,rgba(11,163,241,1) 70%,rgba(15,123,177,0.3) 100%) ;
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-color:transparent ;
+  color:#ffffff;
+
+}
+
+.navbar-feelstyle .navbar-brand{
+  font-size:30px;
+  color:#ffffff !important;
+}
+
+
+.portrait{
+  width:40px ;
+  height:40px ;
+  border-radius:40px;
+  position:absolute;
+  top:11px;
+  left:10px;
+  background: #aeaeae;
+  overflow: hidden;
+
+}
+.login-name{
+  width:150px ;
+  height:36px ;
+/*  border:1px solid ;*/
+  border-radius:17px;
+  padding:6px 12px 6px 45px;
+  background:#09161a;
+  color:#0ba3f1;
+  margin-top: -2px;
+}
+
+.menu-btn{
+  width:24px;
+  height:24px;
+  display: inline-block;
+}
+.menu-btn use{
+  width:100%;
+  height:100%;
+  fill:#0ca3f1;
+}
+
+.nav-feelstyle  > li > a:hover .menu-btn use,.navbar-feelstyle .nav > li > a.active  .menu-btn use{
+  fill:#ffffff;
+}
+
+.map-box{
+
+  width:calc(100% - 30px);
+  height:100%;
+  padding-top:90px;
+
+
+}
+
+#map{
+  width:100%;
+  height:850px;
+}
+
+@media (max-width: 1800px){
+  .navbar-collapse.collapse .hide-first {
+     display: none !important;
+  }
+}
+
+.btn-person{
+  width:24px;
+  height:24px;
+  display: inline-block;
+  vertical-align: bottom;
+  color:#ffffff !important;
+  margin-right:10px;
+}
+
+.btn-person use{
+  fill:#ffffff;
+}
+
+.cover-style{
+  background: transparent;
+  color:#ffffff !important;
+  border:none !important;
+}
+
+.cover-style li a {
+  color:#ffffff !important;
+  padding:16px 15px;
+}
+
+.cover-style li a:hover{
+  background: none;
+}
+
+.nav  > li > a:focus{
+  background: none;
+}

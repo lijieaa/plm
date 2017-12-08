@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head >
+    <div th:replace="header::head"></div>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+    <script th:src="@{/plugins/bootstraptable/bootstrap-table.min.js}"></script>
+    <script th:src="@{/plugins/bootstraptable/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+</head>
+<body>
+<div id="app" class="wrapper sys">
+    <div class="header" th:replace="header::header"></div>
+    <div class="center-block map-box">
+        <div class="panel-body" style="padding-bottom:0px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">查询条件</div>
+                <div class="panel-body">
+                    <div id="formSearch" class="form-horizontal">
+                        <div class="form-group" style="margin-top:15px">
+                            <label class="control-label col-sm-1" for="txt_search_departmentname">用户名称</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control"  name="sername" v-model="sername" id="txt_search_departmentname">
+                            </div>
+                            <label class="control-label col-sm-1" for="txt_search_statu">姓名</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control"  name="sernikname" v-model="sernikname" id="txt_search_statu">
+                            </div>
+                            <div class="col-sm-4" style="text-align:left;">
+                                <button type="button" style="margin-left:50px" id="btn_query"  @click="search()" class="btn btn-primary">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-default" data-toggle="modal" @click="newUser()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增用户
+                </button>
+                <!--<button id="btn_edit" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+                </button>-->
+                <button id="btn_delete" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
+                </button>
+            </div>
+            <table id="tb_departments"></table>
+        </div>
+
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <form id="custom">
+                <input type="hidden" name="userId" v-model="user.userId">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" v-text="cusModal">添加用户</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="loginname">用户名</label>
+                            <input type="hidden"  class="form-control"  name="rename" v-bind:value="rename">
+                            <input type="text" class="form-control" id="loginname" name="username" v-model="user.username" placeholder="Jane Doe" v-bind:disabled="!newedit">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">姓名</label>
+                            <input type="text" class="form-control" id="username" name="nickname" v-model="user.nickname" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="text" class="form-control" id="password"  name ="password" v-model="user.password"   placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPw">确认密码</label>
+                            <input type="text" class="form-control" id="confirmPw" name="repassword"     placeholder="Jane Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">所属公司</label>
+                            <input type="text" class="form-control" id="company" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">联系电话</label>
+                            <input type="text" class="form-control" id="phone"  name="tel"  v-model="user.tel" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="text" class="form-control" id="email" name="email"  v-model="user.email"  placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label >角色</label>
+                            <div class="radio">
+                                <label class="radio-inline">
+                                    <input type="radio" name="roleId" id="inlineRadio1" v-model="user.roleId" value="1"> 超级管理
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="roleId" id="inlineRadio2"  v-model="user.roleId" value="2"> 普通用户
+                                </label>
+
+                            </div>
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <!-- alert -->
+</div>
+
+
+
+<script>
+/*    $(".alert").alert()
+    $("#taskList").jqGrid({
+     /!*   url:$$("ao/page/"),*!/
+       url:"/js/mydata.json",
+      /!*  ajaxGridOptions: { contentType: 'application/json; charset=utf-8',
+            success:function(data){
+                console.log(data)
+                return data;
+            }
+
+        },*!/
+        page:1,
+        datatype:"json",
+        multiselect : true,
+
+        colModel:[
+            {label:'用户ID',name:'id',align:'center',sortable:false,width:100,classes:"",key:true},
+            {label:'用户名',name:'name',align:'left',sortable:false,width:230},
+            {label:'所属公司',name:'age',align:'center',sortable:false,width:155},
+            {label:'姓名',name:'name',align:'left',sortable:false,width:230},
+            {label:'联系电话',name:'age',align:'center',sortable:false,width:155},
+            {label:'邮箱',name:'name',align:'left',sortable:false,width:230},
+            {label:'角色',name:'age',align:'center',sortable:false,width:155},
+            {label:'创建时间',name:'age',align:'center',sortable:false,width:155},
+            {label:'操作',name:'age',align:'center',sortable:false,width:155,formatter:function(cellvalue,options,rowObject){
+                return '<button class="btn btn-default btn-xs">修改</button> <button class="btn btn-default btn-xs">删除</button>'
+            }}
+       /!* {label:'ID',name:'id',align:'center',sortable:false,hidden:true},
+            {label:'&nbsp;',name:'',align:'center',sortable:false,width:36,formatter:function(cellvalue, options, rowObject){
+
+                var edit='';
+                if($("#roleName").text() == 'ROLE_MEMBER'){
+                    edit='<span class="btn grey-btn">详情</span>';
+                }
+                else {
+                    edit='<span class="btn view-btn">详情</span>';
+                }
+                return  edit;
+            }},
+            {label:'操',name:'oper',align:'center',sortable:false,width:35,formatter:function(cellvalue, options, rowObject){
+                var edit='';
+                var oo={
+                    planDateOnFinish:rowObject.planDateOnFinish,
+                    planDateOnStart:rowObject.planDateOnStart,
+                    classMembers:rowObject.classMembers.map(function(item){return item.userId}),
+                    monitor:""
+                };
+                if(!!rowObject.monitor){
+                    oo.monitor =  rowObject.monitor.userId
+                }
+
+
+                if(rowObject.status.statusName == '待评定' || rowObject.status.statusName == '已评定' || $("#roleName").text() == 'ROLE_MEMBER'){
+                    edit='<span class="btn grey-btn">分配</span>';
+                }
+                else {
+                    edit='<span class="btn dis-btn" data-row-object='+JSON.stringify(oo)+'>分配</span>';
+                }
+                return  edit;
+            }},
+            {label:'作',name:'ate',align:'center',sortable:false,width:35,formatter:function(cellvalue, options, rowObject){
+                var edit =''
+                if(rowObject.status.statusName == '未派单' || rowObject.status.statusName == '待评定' || rowObject.status.statusName == '已评定' ||$("#roleName").text() == 'ROLE_MEMBER'){
+                    edit='<span class="btn grey-btn">导出</span>';
+                }
+                else {
+                    edit='<span class="btn edit-btn">导出</span>';
+                }
+
+                return  edit;
+            }},
+            {label:'&nbsp;',name:'',align:'center',sortable:false,width:35,formatter:function(cellvalue, options, rowObject){
+                var edit='';
+
+                if($("#roleName").text() == 'ROLE_MEMBER' || rowObject.status.statusName == '现场安装'){
+                    edit='<span class="btn grey-btn">删除</span>';
+                }
+                else {
+                    edit='<span class="btn del-btn">删除</span>';
+                }
+                return  edit;
+            }}*!/
+        ],
+        width:1004,
+        height: 500,
+        rowNum:12,
+        jsonReader:{
+            root: "rows",    // json中代表实际模型数据的入口
+            page: "page",    // json中代表当前页码的数据
+            total: "total",    // json中代表页码总数的数据
+            records: "records", // json中代表数据行总数的数据
+            id:"age"
+        },
+        pager: '#pager',
+        postData:{
+
+        },
+        autowidth:true,
+        sortname: 'age',
+        sortorder : "desc",//排序方式,可选desc,asc
+        viewrecords: true,
+        loadonce : false,
+        mtype : "get",//向后台请求数据的ajax的类型。可选post,get
+        altRows: true,
+        shrinkToFit: false,
+        contentType : "application/json",
+        editurl : 'json/SMS_table.json',
+        prmNames : {
+            page:"page", // 表示请求页码的参数名称
+            rows:"rows", // 表示请求行数的参数名称
+            sort: "sidx", // 表示用于排序的列名的参数名称
+            order: "sord", // 表示采用的排序方式的参数名称
+            search:"_search", // 表示是否是搜索请求的参数名称
+            nd:"nd", // 表示已经发送请求的次数的参数名称
+            id:"id", // 表示当在编辑数据模块中发送数据时，使用的id的名称
+            oper:"oper", // operation参数名称
+            editoper:"edit", // 当在edit模式中提交数据时，操作的名称
+            addoper:"add", // 当在add模式中提交数据时，操作的名称
+            deloper:"del", // 当在delete模式中提交数据时，操作的名称
+            subgridid:"id", // 当点击以载入数据到子表时，传递的数据名称
+            npage: null,
+            totalrows:"totalrows" // 表示需从Server得到总共多少行数据的参数名称，参见jqGrid选项中的rowTotal
+        },
+        serializeGridData:function(postData){
+            postData.page--
+            console.log(postData)
+         return postData
+        },
+        afterInsertRow:function(rowid,rowdata,e){
+
+          /!*  $("#"+rowid).on("click",function(e){
+
+                if($(e.target).hasClass("view-btn")){
+                    window.location.href=$$("taskinfo?orderNo="+rowid);
+                }
+
+                if($(e.target).hasClass("dis-btn")){
+                    console.log(e.target.dataset.rowObject)
+                    var rowObject= e.target.dataset.rowObject
+                    bus.$emit("pop",rowid,rowObject);
+
+                }
+                if($(e.target).hasClass("del-btn")){
+                    $.confirm({
+                        title: false,
+                        theme: 'black',
+                        columnClass: 'myll',
+                        closeIcon: true,
+                        /!* autoClose: 'confirm|10000',*!/
+                        confirmButtonClass: 'btn-confir',
+                        cancelButtonClass: 'btn-cancel',
+                        content: '是否删除工单？',
+                        cancelButton:'取消',
+                        confirmButton: '确认',
+                        confirm: function(){
+                            $.ajax({
+                                url:$$("ao/?id="+rowid),
+                                type:"delete",
+                                success:function(){
+                                    window.location.reload(true);
+                                }
+
+                            });
+                        }
+                    });
+
+                }
+
+                if($(e.target).hasClass("edit-btn")){
+
+                    $("#"+rowid).find(".del-btn").addClass('grey-btn').removeClass('del-btn');
+                    $("#taskList").setCell(rowid,5,"现场安装");
+                    window.location.href=$$("ao/exportAo?id="+rowid)
+
+
+
+                }
+            });*!/
+        },
+        gridComplete:function(xhr){
+            console.log("gridComplae")
+
+        },
+        loadComplete:function(xhr){
+            var selectedId  =   $("#taskList").jqGrid("getGridParam","page");
+
+            $(".ui-icon-seek-first").html("首页");
+            $(".ui-icon-seek-prev").html('上一页');
+            $(".ui-icon-seek-next").html('下一页');
+            $(".ui-icon-seek-end").html("尾页");
+
+        },
+        gridCompleteExpansion: function( gridObject ){
+            console.log("gridCompleteExpansion", gridObject)
+        }
+    });
+    jQuery("#taskList").jqGrid('navGrid', '#pager', {
+        edit : false,
+        add : false,
+        del : false
+    });*/
+    function reloadTask(data){
+        $("#taskList").getGridParam().postData=null;
+        $("#taskList").setGridParam({
+            postData:data,
+            page:1
+        }).trigger("reloadGrid");
+    }
+
+    //批量删除
+
+
+function reloadUser(){
+    var opt = {
+        silent: true,
+        pageNumber:1
+    };
+    $("#tb_departments").bootstrapTable('refresh', opt);
+}
+
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="  btn-edit">',
+        '<i class="glyphicon glyphicon-edit"></i>编辑',
+        '</a>  ',
+        '<a class="  btn-remove" >',
+        '<i class="glyphicon glyphicon-remove"></i>删除',
+        '</a>'
+    ].join('');
+}
+
+window.operateEvents= {
+  "click .btn-edit":function(e,value,rows,index){
+
+      bus.$emit("eidtData",rows)
+
+  },
+  "click .btn-remove":function(e,value,rows,index){
+      bus.$emit("remove",rows)
+    }
+}
+
+var bus = new Vue();
+
+var app = new Vue({
+    el:"#app",
+    data:{
+        newedit:true,
+        sername:"",
+        sernikname:"",
+        rename:"",
+        user:{
+            userId:"0",
+            username : "",
+            nickname : "",
+            tel : "",
+            email : "952054767@qq.com",
+            password : "",
+            roleId : 1
+        }
+    },
+    computed:{
+        cusModal:function(){
+            return this.newedit?"新建用户":"编辑用户";
+        }
+    },
+    updated:function(){
+    },
+    methods:{
+      renderForm: function(data){
+          this.user.userId=data.userId;
+          this.user.username=data.username;
+          this.user.nickname=data.nickname;
+          this.user.tel=data.tel;
+          this.user.email=data.email;
+          this.user.password=data.password;
+          this.user.roleId=data.roleId;
+      },
+      resetForm:function(){
+          this.rename="";
+          this.user.userId=-1;
+          this.user.username="";
+          this.user.nickname="";
+          this.user.tel="13200000011";
+          this.user.email="demo@qq.com"
+          this.user.password="123456";
+          this.user.roleId=1;
+      },
+      newUser:function(){
+          this.newedit=true;
+          $('#myModal').modal('show')
+      },
+      search:function(){
+          var that = this;
+          var opt = {
+              pageNumber:1,
+              silent: true,
+              query:{
+                  username:that.sername,
+                  nickname:that.sernikname
+              }
+          };
+      /*    $('#tb_departments').bootstrapTable('refreshOptions',{pageNumber:1});*/
+          $("#tb_departments").bootstrapTable('refresh', opt);
+      }
+    },
+    mounted:function(){
+        var that = this;
+        bus.$on("eidtData",function(data){
+            console.log(data)
+            that.newedit=false;
+            that.renderForm(data)
+            $('#myModal').modal('show')
+        });
+
+        bus.$on("remove",function(e){
+            console.log(e);
+            bootbox.confirm({
+                title: "操作提示",
+                message: "确认要删除选择的数据吗?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> 取消'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> 确认'
+                    }
+                },
+                callback: function (result) {
+                    if(result){
+                        $.ajax({
+                            url:$$("/api/sys_user/"+ e.userId),
+                            type:"delete",
+                            datatype:"json",
+                            'contentType': "application/json; charset=utf-8",
+                            success:function(data){
+                                reloadUser()
+                            }
+                        });
+
+                    }
+
+                }
+            });
+        });
+
+        $('#myModal').modal({
+            keyboard: false,
+            show:false,
+            backdrop:false,
+
+        })
+        $('#myModal').on('hidden.bs.modal', function () {
+            $('#myInput').focus()
+            $(this).removeData("bs.modal");
+/*            $('#custom').reset()*/
+            $('#custom').data('bootstrapValidator').resetForm(true);
+            that.resetForm()
+        })
+        $('#tb_departments').bootstrapTable({
+            url:$$("/api/sys_view/queryPage"),//请求后台的URL（*）
+            dataType:"json",                    //返回数据类型
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            pagination: true,                   //是否显示分页（*）
+            editable:true,//开启编辑模式
+            clickToSelect: false, //是否启用点击选中行
+            onlyInfoPagination:false,
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            singleSelect:false,                 //禁止多选
+            maintainSelected:false ,            // 在点击分页按钮或搜索按钮时，将记住checkbox的选择项
+            striped:false,                      //隔行显示颜色
+            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+
+            height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "userId",                     //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            columns: [
+                {checkbox: true},
+                {field: 'userId', title: '用户编号'},
+                {field: 'username', title: '用户名'},
+                {field: 'age', title: '所属公司'},
+                {field: 'nickname', title: '姓名'},
+                {field: 'tel', title: '联系电话'},
+                {field: 'email', title: '邮箱'},
+                {field: 'roleNickname', title: '角色'},
+                {field: 'createTime', title: '创建时间'},
+                /*    {field: 'name', title: '操作', formatter: function(value,row ,index){
+                 var s = JSON.stringify(row)
+                 var td="<button class='btn ed' onclick='openeidt("+ s +")'>click</button> <button class='btn del' onclick='opendel("+ s +")'>del</button>"
+                 return td;
+                 },events: {'click':function(e,v,r ,i){alert(1)}},*/
+
+                {field: 'Button', title: '操作', formatter:operateFormatter,events: operateEvents,
+                }
+
+            ],
+            queryParams:function(params){
+                params.page=params.offset/params.limit
+                params.size=params.limit
+                params.sort="userId,desc"
+                params.username=that.sername
+                params.nickname=that.sernikname
+                return params
+            },
+            responseHandler:function(res){
+                return {
+                    "total": res.data.page.records,//总页数
+                    "rows": res.data.page.rows,   //数据
+
+                };
+            },
+
+        });
+        $("#btn_delete").click(function(){
+            var selected = $('#tb_departments').bootstrapTable('getSelections');
+            console.log(selected)
+            var ids =selected.map(function(item){return item.userId})
+             if(ids.length<=0){
+                 bootbox.alert("请选择有效数据");
+             }else{
+                 bootbox.confirm({
+                     title: "操作提示",
+                     message: "确认要删除选择的数据吗?",
+                     buttons: {
+                         cancel: {
+                             label: '<i class="fa fa-times"></i> 取消'
+                         },
+                         confirm: {
+                             label: '<i class="fa fa-check"></i> 确认'
+                         }
+                     },
+                     callback: function (result) {
+
+                         if(result){
+
+                             $.ajax({
+                                 url:$$("/api/sys_user/bat_del"),
+                                 type:"delete",
+                                 datatype:"json",
+                                 contentType:"application/json; charset=utf-8",
+                                 crossDomain: true,
+                                 /*   processData:true,*/
+                                 data:JSON.stringify(ids),
+                                 success:function(data){
+                                     /*  window.location.reload();*/
+                                 }
+
+                             });
+
+                         }
+
+                     }
+                 });
+
+             }
+
+        })
+        $('#custom').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            excluded: [':disabled'],
+            fields: {
+                username: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        different: {//不能和用户名相同
+                            field: 'rename',//需要进行比较的input name值
+                            message: '用户名已存在'
+                        }
+                    }
+                },
+                rename: {
+                    message: '用户名验证失败',
+                    validators: {
+
+                    }
+                },
+                password: {
+                    message:'密码无效',
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: '用户名长度必须在6到30之间'
+                        },
+                        identical: {//相同
+                            field: 'password', //需要进行比较的input name值
+                            message: '两次密码不一致'
+                        },
+                        different: {//不能和用户名相同
+                            field: 'username',//需要进行比较的input name值
+                            message: '不能和用户名相同'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: 'The username can only consist of alphabetical, number, dot and underscore'
+                        }
+                    }
+                },
+                repassword: {
+                    message: '密码无效',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: '用户名长度必须在6到30之间'
+                        },
+                        identical: {//相同
+                            field: 'password',
+                            message: '两次密码不一致'
+                        },
+                        different: {//不能和用户名相同
+                            field: 'username',
+                            message: '不能和用户名相同'
+                        },
+                        regexp: {//匹配规则
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: 'The username can only consist of alphabetical, number, dot and underscore'
+                        }
+                    }
+                },
+                email: {
+                    validators: {
+                        notEmpty: {
+                            message: '邮件不能为空'
+                        },
+                        emailAddress: {
+                            message: '请输入正确的邮件地址如：123@qq.com'
+                        }
+                    }
+                },
+                phone: {
+                    message: 'The phone is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: '手机号码不能为空'
+                        },
+                        stringLength: {
+                            min: 11,
+                            max: 11,
+                            message: '请输入11位手机号码'
+                        },
+                        regexp: {
+                            regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                            message: '请输入正确的手机号码'
+                        }
+                    }
+                },
+            }
+        }) .on('success.form.bv', function(e) {//点击提交之后
+            // Prevent form submission
+            e.preventDefault();
+            $.ajax({
+                url:$$("/api/sys_user"),
+                type:"post",
+                datatype:"json",
+                'contentType': "application/json; charset=utf-8",
+                data:JSON.stringify(that.user),
+                success:function(data){
+                    $('#myModal').modal('hide')
+                    reloadUser()
+                }
+            });
+            });;
+
+
+
+        $("#lmj").click(function(){
+
+            $.ajax({
+                url:$$("/api/sys_user"),
+                type:"post",
+                datatype:"json",
+                contentType:"application/json; charset=utf-8",
+                crossDomain: true,
+             /*   processData:true,*/
+                data:{
+                    "email": "string1",
+                    "nickname": "string1",
+                    "password": "string",
+                    "roleId": 0,
+                    "tel": "string",
+                    "userId": "-1",
+                    "username": "哈哈哈xx"
+                },
+                success:function(data){
+                  /*  window.location.reload();*/
+                }
+
+            });
+        })
+    },
+    watch:{
+        "user.username":function(){
+
+            var that = this;
+            console.log(that.user.username)
+            $.ajax({
+                url:$$("/api/sys_user/search/findByUsername"),
+                type:"get",
+                datatype:"json",
+                data:{
+                        username:that.user.username
+                },
+                'contentType': "application/json; charset=utf-8",
+                success:function(data){
+                   console.log(data)
+                    if(data.code==200){
+                        that.rename= that.user.username
+                    }else{
+                        that.rename=""
+                    }
+                    console.log(that.rename)
+                    that.$nextTick(function(){
+                        $("#custom").data("bootstrapValidator").updateStatus("username",  "NOT_VALIDATED",  null );
+                        $("#custom").data("bootstrapValidator").validateField('username');
+                    })
+
+                }
+            })
+        }
+
+    }
+})
+
+
+
+
+</script>
+</body>
+</html>

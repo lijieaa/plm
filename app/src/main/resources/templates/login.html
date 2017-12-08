@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:replace="header::head"></div>
+</head>
+<body>
+
+   <div class="wrapper login-page">
+       <div class="container">
+           <div class="login-box center-block">
+                    <div class="text-center sys-logo"><img th:src="@{/image/login-logo.png}" alt="登录图"/></div>
+                    <h3 class="text-center sys-name">云设备管理系统</h3>
+                   <!-- <form  class="" th:action="@{/login}" method="post">
+                        <div class="form-group form-group-lg">
+                            <label class="sr-only" for="usesrname">Amount (in dollars)</label>
+                            <div class="input-group">
+                                <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                                <input id="usesrname" class="form-control" type="text" name="username"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-lg has-success has-feedback">
+                            <label class="sr-only" for="pw">Amount (in dollars)</label>
+                            <div class="input-group">
+                                <div class="input-group-addon "><span class="glyphicon glyphicon-user"></span></div>
+                                <input id="pw" class="form-control" type="password" name="password"/>
+
+                            </div>
+                            <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputGroupSuccess1Status" class="sr-only">(success)</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">login</button>
+                    </form>-->
+               <form  class="" th:action="@{/login}" method="post">
+                   <input type="password" style="display:none;width:0;height:0;"/>
+                   <div class="form-group form-group-lg has-feedback has-feelstyle">
+                       <label class="sr-only" for="usesrname">Amount (in dollars)</label>
+                           <input id="usesrname" class="form-control userbox" type="text" name="username" autocomplete="off"/>
+                        <span class="form-control-feedback" aria-hidden="true"><img th:src="@{/image/login-user.png}" alt="u"/></span>
+                   </div>
+                   <div class="form-group form-group-lg  has-feedback has-feelstyle">
+                       <label class="sr-only" for="pw">Amount (in dollars)</label>
+                       <input id="pw" class="form-control userbox" type="password" name="password" autocomplete="new-password"/>
+                       <span class="form-control-feedback" aria-hidden="true"><img th:src="@{/image/login-pw.png}" alt="u"/></span>
+
+                   </div>
+                   <button type="submit" class="btn  btn-block  btn-login">登录</button>
+               </form>
+           </div>
+       </div>
+       <div class="footer"></div>
+       <div id="tips">111</div>
+
+</div>
+   <script>
+       /*<![CDATA[*/
+       window.name="";
+       var dt = document.getElementById("tips")
+       var autoComplete = false
+       var reset = function(){
+           if(autoComplete){
+               dt.style.display='none'
+           }
+
+       }
+       var  input = document.querySelectorAll(".userbox")
+       for(var i = 0, l = input.length;i < l;i++){
+
+           if(input[i].addEventListener){
+               input[i].addEventListener('keydown',function(){
+                   autoComplete = true
+               });
+               input[i].addEventListener('input',reset)
+           }
+           else{
+               input[i].attachEvent('input',reset)
+           }
+
+       }
+       /*]]>*/
+
+
+   </script>
+</body>
+</html>

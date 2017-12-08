@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head >
+    <div th:replace="header::head"></div>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+    <script th:src="@{/plugins/bootstraptable/bootstrap-table.min.js}"></script>
+    <script th:src="@{/plugins/bootstraptable/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+</head>
+<body>
+<div id="app" class="wrapper sys">
+    <div class="header" th:replace="header::header"></div>
+    <div class="center-block map-box">
+        <div class="panel-body" style="padding-bottom:0px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">查询条件</div>
+                <div class="panel-body">
+                    <div id="formSearch" class="form-horizontal">
+                        <div class="form-group" style="margin-top:15px">
+                            <label class="control-label col-sm-1" for="txt_search_departmentname">客户名称</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control"  name="sername" v-model="sername" id="txt_search_departmentname">
+                            </div>
+                            <label class="control-label col-sm-1" for="txt_search_statu">负责人</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control"  name="sernikname" v-model="sernikname" id="txt_search_statu">
+                            </div>
+                            <label class="control-label col-sm-1" for="txt_search_statu">联系电话</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control"  name="sertel" v-model="sertel" id="txt_search_statu">
+                            </div>
+                            <div class="col-sm-3" style="text-align:left;">
+                                <button type="button" style="margin-left:50px" id="btn_query"  @click="search()" class="btn btn-primary">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-default" data-toggle="modal" @click="newUser()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增客户
+                </button>
+                <!--<button id="btn_edit" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+                </button>-->
+                <button id="btn_delete" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>批量删除
+                </button>
+            </div>
+            <table id="tb_departments"></table>
+        </div>
+
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <form id="custom">
+                <input type="hidden" name="cusId" v-model="user.cusId">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel" v-text="cusModal">添加客户</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="loginname">客户名称</label>
+                            <input type="hidden"  class="form-control"  name="rename" v-bind:value="rename">
+                            <input type="text" class="form-control" id="loginname" name="cusName" v-model="user.cusName" placeholder="Jane Doe" v-bind:disabled="!newedit">
+                        </div>
+                        <div class="form-group">
+                            <label for="cusName">客户地址</label>
+                            <input type="text" class="form-control" id="cusName" name="cusAddr" v-model="user.cusAddr" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label >负责人</label>
+                            <input type="text" class="form-control"  id="inlineRadio1" v-model="user.cusCon"  name="cusCon">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">联系电话</label>
+                            <input type="text" class="form-control" id="phone"  name="cusTel"  v-model="user.cusTel" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="cusEmail">邮箱</label>
+                            <input type="text" class="form-control" id="cusEmail" name="cusEmail"  v-model="user.cusEmail"  placeholder="">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- alert -->
+</div>
+
+
+
+<script>
+
+    function reloadTask(data){
+        $("#taskList").getGridParam().postData=null;
+        $("#taskList").setGridParam({
+            postData:data,
+            page:1
+        }).trigger("reloadGrid");
+    }
+
+    //批量删除
+
+
+    function reloadUser(){
+        var opt = {
+            silent: true,
+            pageNumber:1
+        };
+        $("#tb_departments").bootstrapTable('refresh', opt);
+    }
+
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<a class="  btn-edit">',
+            '<i class="glyphicon glyphicon-edit"></i>编辑',
+            '</a>  ',
+            '<a class="  btn-remove" >',
+            '<i class="glyphicon glyphicon-remove"></i>删除',
+            '</a>'
+        ].join('');
+    }
+
+    window.operateEvents= {
+        "click .btn-edit":function(e,value,rows,index){
+
+            bus.$emit("eidtData",rows)
+
+        },
+        "click .btn-remove":function(e,value,rows,index){
+            bus.$emit("remove",rows)
+        }
+    }
+
+    var bus = new Vue();
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            newedit:true,
+            sername:"",
+            sernikname:"",
+            sertel:"",
+            rename:"",
+            user:{
+                cusId:"-1",
+                cusName : "",
+                cusAddr : "",
+                cusTel : "",
+                cusEmail : "952054767@qq.com",
+                password : "",
+                cusCon : ""
+            }
+        },
+        computed:{
+            cusModal:function(){
+                return this.newedit?"新建客户":"编辑客户";
+            }
+        },
+        updated:function(){
+        },
+        methods:{
+            renderForm: function(data){
+                this.user.cusId=data.cusId;
+                this.user.cusName=data.cusName;
+                this.user.cusAddr=data.cusAddr;
+                this.user.cusTel=data.cusTel;
+                this.user.cusEmail=data.cusEmail;
+                this.user.password=data.password;
+                this.user.cusCon=data.cusCon;
+            },
+            resetForm:function(){
+                this.rename="";
+                this.user.cusId=-1;
+                this.user.cusName="";
+                this.user.cusAddr="";
+                this.user.cusTel="";
+                this.user.cusEmail="demo@qq.com"
+                this.user.password="123456";
+                this.user.cusCon="";
+            },
+            newUser:function(){
+                this.newedit=true;
+                $('#myModal').modal('show')
+            },
+            search:function(){
+                var that = this;
+                var opt = {
+                    pageNumber:1,
+                    silent: true,
+                    query:{
+                        cusName:that.sername,
+                        cusCon:that.sernikname,
+                        cusTel:that.sertel
+                    }
+                };
+                /*    $('#tb_departments').bootstrapTable('refreshOptions',{pageNumber:1});*/
+                $("#tb_departments").bootstrapTable('refresh', opt);
+            }
+        },
+        mounted:function(){
+            var that = this;
+            bus.$on("eidtData",function(data){
+                console.log(data)
+                that.newedit=false;
+                that.renderForm(data)
+                $('#myModal').modal('show')
+            });
+
+            bus.$on("remove",function(e){
+                console.log(e);
+                bootbox.confirm({
+                    title: "操作提示",
+                    message: "确认要删除选择的数据吗?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> 取消'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> 确认'
+                        }
+                    },
+                    callback: function (result) {
+                        if(result){
+                            $.ajax({
+                                url:$$("/api/cus_org/"+ e.cusId),
+                                type:"delete",
+                                datatype:"json",
+                                'contentType': "application/json; charset=utf-8",
+                                success:function(data){
+                                    reloadUser()
+                                }
+                            });
+
+                        }
+
+                    }
+                });
+            });
+
+            $('#myModal').modal({
+                keyboard: false,
+                show:false,
+                backdrop:false,
+
+            })
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('#myInput').focus()
+                $(this).removeData("bs.modal");
+                            document.querySelector('#custom').reset()
+                $('#custom').data('bootstrapValidator').resetForm(true);
+                that.resetForm()
+            })
+            $('#tb_departments').bootstrapTable({
+                url:$$("/api/cus_org/queryPage"),//请求后台的URL（*）
+                dataType:"json",                    //返回数据类型
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                pagination: true,                   //是否显示分页（*）
+                editable:true,//开启编辑模式
+                clickToSelect: false, //是否启用点击选中行
+                onlyInfoPagination:false,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 3,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                singleSelect:false,                 //禁止多选
+                maintainSelected:false ,            // 在点击分页按钮或搜索按钮时，将记住checkbox的选择项
+                striped:false,                      //隔行显示颜色
+                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "cusId",                     //每一行的唯一标识，一般为主键列
+                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [
+                    {checkbox: true},
+                    {field: 'cusId', title: '客户编号'},
+                    {field: 'cusName', title: '客户名称'},
+                    {field: 'cusAddr', title: '地址'},
+                    {field: 'cusTel', title: '联系电话'},
+                    {field: 'cusEmail', title: '邮箱'},
+                    {field: 'cusCon', title: '负责人'},
+                    {field: 'createTime', title: '创建时间'},
+                    /*    {field: 'name', title: '操作', formatter: function(value,row ,index){
+                     var s = JSON.stringify(row)
+                     var td="<button class='btn ed' onclick='openeidt("+ s +")'>click</button> <button class='btn del' onclick='opendel("+ s +")'>del</button>"
+                     return td;
+                     },events: {'click':function(e,v,r ,i){alert(1)}},*/
+
+                    {field: 'Button', title: '操作', formatter:operateFormatter,events: operateEvents,
+                    }
+
+                ],
+                queryParams:function(params){
+                    params.page=params.offset/params.limit
+                    params.size=params.limit
+                    params.sort="cusId,desc"
+                    params.cusName=that.sername
+                    params.cusCon=that.sernikname
+                    params.cusCon=that.sertel
+                    return params
+                },
+                responseHandler:function(res){
+                    return {
+                        "total": res.data.page.records,//总页数
+                        "rows": res.data.page.rows,   //数据
+
+                    };
+                },
+
+            });
+            $("#btn_delete").click(function(){
+                var selected = $('#tb_departments').bootstrapTable('getSelections');
+                console.log(selected)
+                var ids =selected.map(function(item){return item.cusId})
+                if(ids.length<=0){
+                    bootbox.alert("请选择有效数据");
+                }else{
+                    bootbox.confirm({
+                        title: "操作提示",
+                        message: "确认要删除选择的数据吗?",
+                        buttons: {
+                            cancel: {
+                                label: '<i class="fa fa-times"></i> 取消'
+                            },
+                            confirm: {
+                                label: '<i class="fa fa-check"></i> 确认'
+                            }
+                        },
+                        callback: function (result) {
+
+                            if(result){
+
+                                $.ajax({
+                                    url:$$("/api/cus_org/bat_del"),
+                                    type:"delete",
+                                    datatype:"json",
+                                    contentType:"application/json; charset=utf-8",
+                                    crossDomain: true,
+                                    /*   processData:true,*/
+                                    data:JSON.stringify(ids),
+                                    success:function(data){
+                                        /*  window.location.reload();*/
+                                    }
+
+                                });
+
+                            }
+
+                        }
+                    });
+
+                }
+
+            })
+            $('#custom').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                excluded: [':disabled'],
+                fields: {
+                    cusName: {
+                        message: '客户名验证失败',
+                        validators: {
+                            notEmpty: {
+                                message: '客户名不能为空'
+                            },
+                            different: {//不能和用户名相同
+                                field: 'rename',//需要进行比较的input name值
+                                message: '客户名已存在'
+                            }
+                        }
+                    },
+                    rename: {
+                        message: '客户名名验证失败',
+                        validators: {
+
+                        }
+                    },
+                    cusEmail: {
+                        validators: {
+                            notEmpty: {
+                                message: '邮件不能为空'
+                            },
+                            cusEmailAddress: {
+                                message: '请输入正确的邮件地址如：123@qq.com'
+                            }
+                        }
+                    },
+                    cusTel: {
+                        message: 'The phone is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '手机号码不能为空'
+                            },
+                            stringLength: {
+                                min: 11,
+                                max: 11,
+                                message: '请输入11位手机号码'
+                            },
+                            regexp: {
+                                regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                                message: '请输入正确的手机号码'
+                            }
+                        }
+                    },
+                }
+            }) .on('success.form.bv', function(e) {//点击提交之后
+                // Prevent form submission
+                e.preventDefault();
+                $.ajax({
+                    url:$$("/api/cus_org"),
+                    type:"post",
+                    datatype:"json",
+                    'contentType': "application/json; charset=utf-8",
+                    data:JSON.stringify(that.user),
+                    success:function(data){
+                        $('#myModal').modal('hide')
+                        reloadUser()
+                    }
+                });
+            });;
+
+
+
+
+        },
+        watch:{
+            "user.cusName":function(){
+
+                var that = this;
+                console.log(that.user.cusName)
+                $.ajax({
+                    url:$$("/api/cus_org/search/findByCusName"),
+                    type:"get",
+                    datatype:"json",
+                    data:{
+                        cusName:that.user.cusName
+                    },
+                    'contentType': "application/json; charset=utf-8",
+                    success:function(data){
+                        console.log(data)
+                        if(data.code==200){
+                            that.rename= that.user.cusName
+                        }else{
+                            that.rename=""
+                        }
+                        console.log(that.rename)
+                        that.$nextTick(function(){
+                            $("#custom").data("bootstrapValidator").updateStatus("cusName",  "NOT_VALIDATED",  null );
+                            $("#custom").data("bootstrapValidator").validateField('cusName');
+                        })
+
+                    }
+                })
+            }
+
+        }
+    })
+
+
+
+
+</script>
+</body>
+</html>
